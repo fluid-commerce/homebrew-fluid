@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-# require "fileutils"
-
 # formula generated from gem 'fluid_cli'
 class FluidCliAT1 < Formula
   # Helper module to get the Ruby binary path

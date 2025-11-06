@@ -1,11 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
-# require "fileutils"
-
 # formula generated from gem 'fluid_cli'
-class FluidCliAT1 < Formula
-  # Helper module to get the Ruby binary path
+class FluidCli < Formula
+  # Module to get Ruby binary path from Homebrew Ruby formula
   module RubyBin
     def ruby_bin
       Formula["ruby"].opt_bin
@@ -51,9 +49,8 @@ class FluidCliAT1 < Formula
   desc "Fluid CLI tool"
   homepage "https://fluid.app"
   url "fluid_cli", using: RubyGemsDownloadStrategy
-  version "0.1.2"
-  sha256 "007d1230c43c43a28b523bd071f8918079d6f52b35b5ad5919da3a95f2256e7c"
-  depends_on "git"
+  version "0.1.4"
+  sha256 "ac568b4cccb3f160780649abcfc5ddc5bb959dc31ba4d98445ee5f4608b141b4"
   depends_on "ruby"
 
   def install
@@ -80,17 +77,17 @@ class FluidCliAT1 < Formula
       "--skip-cli-build"
     )
 
-    raise "gem install 'fluid-cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
+    raise "gem install 'fluid_cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
-    bin.rmtree if bin.exist?
+    rm_r(bin) if bin.exist?
     bin.mkpath
 
     brew_gem_prefix = "#{prefix}/gems/fluid_cli-#{version}"
 
     ruby_libs = Dir.glob("#{prefix}/gems/*/lib")
     exe = "fluid"
-    file = Pathname.new("#{brew_gem_prefix}/bin/#{exe}")
-    (bin + "#{file.basename}2").open("w") do |f|
+    file = Pathname.new("#{brew_gem_prefix}/exe/#{exe}")
+    (bin + file.basename.to_s).open("w") do |f|
       f << <<~RUBY
         #!#{ruby_bin}/ruby -rjson --disable-gems
         ENV['ORIGINAL_ENV']=ENV.to_h.to_json

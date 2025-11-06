@@ -80,7 +80,7 @@ class FluidCli < Formula
 
     raise "gem install 'fluid_cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
-    bin.rm_r(bin) if bin.exist?
+    rm_r(bin) if bin.exist?
     bin.mkpath
 
     brew_gem_prefix = "#{prefix}/gems/fluid_cli-#{version}"

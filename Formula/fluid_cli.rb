@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-# require "fileutils"
-
 # formula generated from gem 'fluid_cli'
 class FluidCli < Formula
   # Module to get Ruby binary path from Homebrew Ruby formula
@@ -22,9 +20,7 @@ class FluidCli < Formula
         ENV["GEM_SPEC_CACHE"] = "#{cache}/gem_spec_cache"
 
         _, err, status = Open3.capture3("gem", "fetch", "fluid_cli", "--version", gem_version)
-        unless status.success?
-          odie err
-        end
+        odie err unless status.success?
       end
     end
 
@@ -39,6 +35,7 @@ class FluidCli < Formula
     def gem_version
       @version ||= @resource&.version if defined?(@resource)
       raise "Unable to determine version; did Homebrew change?" unless @version
+
       @version
     end
 
@@ -54,8 +51,8 @@ class FluidCli < Formula
   url "fluid_cli", using: RubyGemsDownloadStrategy
   version "0.1.3"
   sha256 "7dbf43e217a4de0a5e93331e7f0e311445a9cfee943af12e7f578ecd01a78082"
-  depends_on "ruby"
   depends_on "git"
+  depends_on "ruby"
 
   def install
     # set GEM_HOME and GEM_PATH to make sure we package all the dependent gems
@@ -66,9 +63,7 @@ class FluidCli < Formula
 
     # Use /usr/local/bin at the front of the path instead of Homebrew shims,
     # which mess with Ruby's own compiler config when building native extensions
-    if defined?(HOMEBREW_SHIMS_PATH)
-      ENV["PATH"] = ENV["PATH"].sub(HOMEBREW_SHIMS_PATH.to_s, "/usr/local/bin")
-    end
+    ENV["PATH"] = ENV["PATH"].sub(HOMEBREW_SHIMS_PATH.to_s, "/usr/local/bin") if defined?(HOMEBREW_SHIMS_PATH)
 
     system(
       "gem",
@@ -85,7 +80,7 @@ class FluidCli < Formula
 
     raise "gem install 'fluid_cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
-    bin.rmtree if bin.exist?
+    bin.rm_r(bin) if bin.exist?
     bin.mkpath
 
     brew_gem_prefix = "#{prefix}/gems/fluid_cli-#{version}"
@@ -93,7 +88,7 @@ class FluidCli < Formula
     ruby_libs = Dir.glob("#{prefix}/gems/*/lib")
     exe = "fluid"
     file = Pathname.new("#{brew_gem_prefix}/exe/#{exe}")
-    (bin + "#{file.basename}").open("w") do |f|
+    (bin + file.basename.to_s).open("w") do |f|
       f << <<~RUBY
         #!#{ruby_bin}/ruby -rjson --disable-gems
         ENV['ORIGINAL_ENV']=ENV.to_h.to_json

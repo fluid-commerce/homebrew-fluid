@@ -77,7 +77,7 @@ class FluidCli < Formula
       "--skip-cli-build"
     )
 
-    raise "gem install 'fluid_cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
+    raise "gem install 'fluid_cli' failed with status: #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
     rm_r(bin) if bin.exist?
     bin.mkpath

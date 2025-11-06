@@ -1,9 +1,11 @@
 # typed: strict
 # frozen_string_literal: true
 
+# require "fileutils"
+
 # formula generated from gem 'fluid_cli'
-class FluidCliAT1 < Formula
-  # Helper module to get the Ruby binary path
+class FluidCli < Formula
+  # Module to get Ruby binary path from Homebrew Ruby formula
   module RubyBin
     def ruby_bin
       Formula["ruby"].opt_bin
@@ -20,7 +22,9 @@ class FluidCliAT1 < Formula
         ENV["GEM_SPEC_CACHE"] = "#{cache}/gem_spec_cache"
 
         _, err, status = Open3.capture3("gem", "fetch", "fluid_cli", "--version", gem_version)
-        odie err unless status.success?
+        unless status.success?
+          odie err
+        end
       end
     end
 
@@ -35,7 +39,6 @@ class FluidCliAT1 < Formula
     def gem_version
       @version ||= @resource&.version if defined?(@resource)
       raise "Unable to determine version; did Homebrew change?" unless @version
-
       @version
     end
 
@@ -49,10 +52,10 @@ class FluidCliAT1 < Formula
   desc "Fluid CLI tool"
   homepage "https://fluid.app"
   url "fluid_cli", using: RubyGemsDownloadStrategy
-  version "0.1.2"
-  sha256 "007d1230c43c43a28b523bd071f8918079d6f52b35b5ad5919da3a95f2256e7c"
-  depends_on "git"
+  version "0.1.3"
+  sha256 "7dbf43e217a4de0a5e93331e7f0e311445a9cfee943af12e7f578ecd01a78082"
   depends_on "ruby"
+  depends_on "git"
 
   def install
     # set GEM_HOME and GEM_PATH to make sure we package all the dependent gems
@@ -63,7 +66,9 @@ class FluidCliAT1 < Formula
 
     # Use /usr/local/bin at the front of the path instead of Homebrew shims,
     # which mess with Ruby's own compiler config when building native extensions
-    ENV["PATH"] = ENV["PATH"].sub(HOMEBREW_SHIMS_PATH.to_s, "/usr/local/bin") if defined?(HOMEBREW_SHIMS_PATH)
+    if defined?(HOMEBREW_SHIMS_PATH)
+      ENV["PATH"] = ENV["PATH"].sub(HOMEBREW_SHIMS_PATH.to_s, "/usr/local/bin")
+    end
 
     system(
       "gem",
@@ -78,7 +83,7 @@ class FluidCliAT1 < Formula
       "--skip-cli-build"
     )
 
-    raise "gem install 'fluid-cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
+    raise "gem install 'fluid_cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
     bin.rmtree if bin.exist?
     bin.mkpath
@@ -87,8 +92,8 @@ class FluidCliAT1 < Formula
 
     ruby_libs = Dir.glob("#{prefix}/gems/*/lib")
     exe = "fluid"
-    file = Pathname.new("#{brew_gem_prefix}/bin/#{exe}")
-    (bin + "#{file.basename}2").open("w") do |f|
+    file = Pathname.new("#{brew_gem_prefix}/exe/#{exe}")
+    (bin + "#{file.basename}").open("w") do |f|
       f << <<~RUBY
         #!#{ruby_bin}/ruby -rjson --disable-gems
         ENV['ORIGINAL_ENV']=ENV.to_h.to_json

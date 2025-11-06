@@ -3,7 +3,7 @@
 require "formula"
 require "fileutils"
 
-class FluidCLIAT1 < Formula
+class FluidCliAT1 < Formula
   module RubyBin
     def ruby_bin
       Formula["ruby"].opt_bin

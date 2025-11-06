@@ -10,6 +10,13 @@ class FluidCli < Formula
     end
   end
 
+  bottle do
+    root_url "https://github.com/fluid-commerce/homebrew-fluid/releases/download/fluid_cli-0.1.4"
+    rebuild 1
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "a054ac4d7507a1cc0079b58770873f7955f59ad523a2257bc82184e2dabea378"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "bdb36836f8d7d2c69b29b59a0a471b9a99e0d560f82295898fe99e71b9f8ccb0"
+  end
+
   # Custom download strategy to fetch gem from RubyGems
   class RubyGemsDownloadStrategy < AbstractDownloadStrategy
     include RubyBin

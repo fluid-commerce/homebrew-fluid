@@ -1,14 +1,18 @@
+# typed: strict
 # frozen_string_literal: true
 
-require "fileutils"
+# require "fileutils"
 
+# formula generated from gem 'fluid_cli'
 class FluidCliAT1 < Formula
+  # Helper module to get the Ruby binary path
   module RubyBin
     def ruby_bin
       Formula["ruby"].opt_bin
     end
   end
 
+  # Custom download strategy to fetch gem from RubyGems
   class RubyGemsDownloadStrategy < AbstractDownloadStrategy
     include RubyBin
 
@@ -44,11 +48,13 @@ class FluidCliAT1 < Formula
 
   include RubyBin
 
+  desc "Fluid CLI tool"
+  homepage "https://fluid.app"
   url "fluid_cli", using: RubyGemsDownloadStrategy
   version "0.1.2"
   sha256 "007d1230c43c43a28b523bd071f8918079d6f52b35b5ad5919da3a95f2256e7c"
-  depends_on "ruby"
   depends_on "git"
+  depends_on "ruby"
 
   def install
     # set GEM_HOME and GEM_PATH to make sure we package all the dependent gems
@@ -58,7 +64,7 @@ class FluidCliAT1 < Formula
     ENV["GEM_PATH"] = prefix.to_s
 
     # Use /usr/local/bin at the front of the path instead of Homebrew shims,
-    # which mess with Ruby"s own compiler config when building native extensions
+    # which mess with Ruby's own compiler config when building native extensions
     ENV["PATH"] = ENV["PATH"].sub(HOMEBREW_SHIMS_PATH.to_s, "/usr/local/bin") if defined?(HOMEBREW_SHIMS_PATH)
 
     system(
@@ -74,7 +80,7 @@ class FluidCliAT1 < Formula
       "--skip-cli-build"
     )
 
-    raise "gem install "fluid-cli" failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
+    raise "gem install 'fluid-cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
     bin.rmtree if bin.exist?
     bin.mkpath
@@ -87,11 +93,11 @@ class FluidCliAT1 < Formula
     (bin + "#{file.basename}2").open("w") do |f|
       f << <<~RUBY
         #!#{ruby_bin}/ruby -rjson --disable-gems
-        ENV["ORIGINAL_ENV"]=ENV.to_h.to_json
-        ENV["GEM_HOME"]="#{prefix}"
-        ENV["GEM_PATH"]="#{prefix}"
-        ENV["RUBY_BINDIR"]="#{ruby_bin}/"
-        require "rubygems"
+        ENV['ORIGINAL_ENV']=ENV.to_h.to_json
+        ENV['GEM_HOME']="#{prefix}"
+        ENV['GEM_PATH']="#{prefix}"
+        ENV['RUBY_BINDIR']="#{ruby_bin}/"
+        require 'rubygems'
         $:.unshift(#{ruby_libs.map(&:inspect).join(",")})
         load "#{file}"
       RUBY

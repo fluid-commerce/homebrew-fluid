@@ -10,13 +10,6 @@ class FluidCli < Formula
     end
   end
 
-  bottle do
-    root_url "https://github.com/fluid-commerce/homebrew-fluid/releases/download/fluid_cli-0.1.4"
-    rebuild 1
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "a054ac4d7507a1cc0079b58770873f7955f59ad523a2257bc82184e2dabea378"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "bdb36836f8d7d2c69b29b59a0a471b9a99e0d560f82295898fe99e71b9f8ccb0"
-  end
-
   # Custom download strategy to fetch gem from RubyGems
   class RubyGemsDownloadStrategy < AbstractDownloadStrategy
     include RubyBin
@@ -56,8 +49,8 @@ class FluidCli < Formula
   desc "Fluid CLI tool"
   homepage "https://fluid.app"
   url "fluid_cli", using: RubyGemsDownloadStrategy
-  version "0.1.4"
-  sha256 "ac568b4cccb3f160780649abcfc5ddc5bb959dc31ba4d98445ee5f4608b141b4"
+  version "0.1.5"
+  sha256 "2b1c8dc0c27e2099a8628bb1a1ef449b947f774d629d06c4184eb43e16931c6b"
   depends_on "ruby"
 
   def install
@@ -84,7 +77,7 @@ class FluidCli < Formula
       "--skip-cli-build"
     )
 
-    raise "gem install 'fluid_cli' failed with status: #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
+    raise "gem install 'fluid_cli' failed with status #{$CHILD_STATUS.exitstatus}" unless $CHILD_STATUS.success?
 
     rm_r(bin) if bin.exist?
     bin.mkpath

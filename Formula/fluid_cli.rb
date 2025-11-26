@@ -49,8 +49,8 @@ class FluidCli < Formula
   desc "Fluid CLI tool"
   homepage "https://fluid.app"
   url "fluid_cli", using: RubyGemsDownloadStrategy
-  version "0.1.5"
-  sha256 "2b1c8dc0c27e2099a8628bb1a1ef449b947f774d629d06c4184eb43e16931c6b"
+  version "0.1.6"
+  sha256 "ac537262aef187acbb8e414e4c460b9a6a3a27ad66ffaeeea0d902711640a142"
   depends_on "ruby"
 
   def install

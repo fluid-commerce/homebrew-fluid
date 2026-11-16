@@ -51,6 +51,11 @@ class FluidCli < Formula
   url "fluid_cli", using: RubyGemsDownloadStrategy
   version "0.1.9"
   sha256 "1fe4caebb71e25d9f51718d08a71a43fac0254e407ae126eee59a926a161314b"
+
+  # The Fluid CLI is installed from npm now; Homebrew no longer ships it.
+  disable! date:    "2026-11-16",
+           because: "moved to npm: run `npm install -g @fluid-app/fluid-cli @fluid-app/fluid-cli-member-site`"
+
   depends_on "ruby"
 
   def install
